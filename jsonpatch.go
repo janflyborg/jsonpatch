@@ -68,7 +68,7 @@ func CreatePatch(a, b []byte) ([]Operation, error) {
 	if err != nil {
 		return nil, errBadJSONDoc
 	}
-	return diff(aI, bI, "", []Operation{})
+	return Diff(aI, bI, "", []Operation{})
 }
 
 // Returns true if the values matches (must be json types)
@@ -155,8 +155,8 @@ func makePath(path string, newPart interface{}) string {
 	return path + "/" + key
 }
 
-// diff returns the (recursive) difference between a and b as an array of JsonPatchOperations.
-func diff(a, b map[string]interface{}, path string, patch []Operation) ([]Operation, error) {
+// Diff returns the (recursive) difference between a and b as an array of JsonPatchOperations.
+func Diff(a, b map[string]interface{}, path string, patch []Operation) ([]Operation, error) {
 	for key, bv := range b {
 		p := makePath(path, key)
 		av, ok := a[key]
@@ -203,7 +203,7 @@ func handleValues(av, bv interface{}, p string, patch []Operation) ([]Operation,
 	switch at := av.(type) {
 	case map[string]interface{}:
 		bt := bv.(map[string]interface{})
-		patch, err = diff(at, bt, p, patch)
+		patch, err = Diff(at, bt, p, patch)
 		if err != nil {
 			return nil, err
 		}
